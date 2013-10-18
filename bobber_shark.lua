@@ -1,5 +1,5 @@
 -----------------------------------------------------------------------------------------------
--- Fishing - Mossmanikin's version - Bobber Shark 0.0.4
+-- Fishing - Mossmanikin's version - Bobber Shark 0.0.5
 -- License (code & textures): 	WTFPL
 -----------------------------------------------------------------------------------------------
 
@@ -9,6 +9,23 @@ local CaTCH_BiG = {
     {"fishing",  				"shark",			0,			"a small Shark.",			false,			1,		2},
 	{"fishing",  				"pike",				0,			"a Northern Pike.",			false,			3,		3}
 }
+
+local PLaNTS = {
+ --	  MoD* 						 iTeM				MeSSaGe ("You caught "..)
+	{"flowers",					"waterlily",		"a Waterlily." }, 
+	{"flowers",					"waterlily_225",	"a Waterlily." }, 
+	{"flowers",					"waterlily_45",		"a Waterlily." }, 
+	{"flowers",					"waterlily_675",	"a Waterlily." }, 
+	{"flowers",					"waterlily_s1",		"a Waterlily." }, 
+	{"flowers",					"waterlily_s2",		"a Waterlily." }, 
+	{"flowers",					"waterlily_s3",		"a Waterlily." }, 
+	{"flowers",					"waterlily_s4",		"a Waterlily." },
+	{"flowers",					"seaweed",			"some Seaweed."}, 
+	{"flowers",					"seaweed_2",		"some Seaweed."}, 
+	{"flowers",					"seaweed_3",		"some Seaweed."}, 
+	{"flowers",					"seaweed_4",		"some Seaweed."}, 
+}
+-- *as used in the node name
 
 local FISHING_BOBBER_ENTITY_SHARK={
 	hp_max = 605,
@@ -40,20 +57,28 @@ local FISHING_BOBBER_ENTITY_SHARK={
 		if item:get_name() == "fishing:pole" then
 			local inv = clicker:get_inventory()
 			local pos = self.object:getpos()
-			if minetest.env:get_node(pos).name == "flowers:waterlily"
-			or minetest.env:get_node(pos).name == "flowers:waterlily_225"
-			or minetest.env:get_node(pos).name == "flowers:waterlily_45"
-			or minetest.env:get_node(pos).name == "flowers:waterlily_675" then
-				minetest.env:add_node({x=pos.x, y=pos.y, z=pos.z}, {name="air"})
-				if inv:room_for_item("main", {name="flowers:waterlily", count=1, wear=WeaR, metadata=""}) then
-					inv:add_item("main", {name="flowers:waterlily", count=1, wear=WeaR, metadata=""})
-					if MESSAGES == true then say(player, "You caught a Waterlily", false) end -- caught Waterlily					
+			-- catch visible plant
+			if minetest.get_node(pos).name ~= "air" then
+				for i in ipairs(PLaNTS) do
+					local PLaNT = PLaNTS[i][1]..":"..PLaNTS[i][2]
+					local MeSSaGe = PLaNTS[i][3]
+					local DRoP = minetest.registered_nodes[PLaNT].drop
+					if minetest.get_node(pos).name == PLaNT then
+						minetest.add_node({x=pos.x, y=pos.y, z=pos.z}, {name="air"})
+						if inv:room_for_item("main", {name=DRoP, count=1, wear=0, metadata=""}) then
+							inv:add_item("main", {name=DRoP, count=1, wear=0, metadata=""})
+							if MESSAGES == true then say(player, "You caught "..MeSSaGe, false) end -- caught Plant				
+						end
+						if not minetest.setting_getbool("creative_mode") then
+							if inv:room_for_item("main", {name="fishing:fish_raw", count=1, wear=0, metadata=""}) then
+								inv:add_item("main", {name="fishing:bait_worm", count=1, wear=0, metadata=""})
+								if MESSAGES == true then say(player, "The bait is still there.", false) end -- bait still there
+							end
+						end
+					end
 				end
-				if inv:room_for_item("main", {name="fishing:fish_raw", count=1, wear=0, metadata=""}) then
-					inv:add_item("main", {name="fishing:fish_raw", count=1, wear=0, metadata=""})
-					if MESSAGES == true then say(player, "The bait is still there.", false) end -- bait still there
-				end	
-			elseif self.object:get_hp() <= 300 then
+			end
+			if self.object:get_hp() <= 300 then
 				if math.random(1, 100) < SHARK_CHANCE then
 					local 	chance = 		math.random(1, 6) -- ><((((º>
 					for i in pairs(CaTCH_BiG) do
@@ -71,10 +96,12 @@ local FISHING_BOBBER_ENTITY_SHARK={
 									inv:add_item("main", {name=MoD..":"..iTeM, count=1, wear=WeaR, metadata=""})
 									if MESSAGES == true then say(player, "You caught "..MeSSaGe, false) end -- caught somethin'					
 								end
-								if GeTBaiTBack == true then
-									if inv:room_for_item("main", {name="fishing:fish_raw", count=1, wear=0, metadata=""}) then
-										inv:add_item("main", {name="fishing:fish_raw", count=1, wear=0, metadata=""})
-										if MESSAGES == true then say(player, "The bait is still there.", false) end -- bait still there?
+								if not minetest.setting_getbool("creative_mode") then
+									if GeTBaiTBack == true then
+										if inv:room_for_item("main", {name="fishing:fish_raw", count=1, wear=0, metadata=""}) then
+											inv:add_item("main", {name="fishing:fish_raw", count=1, wear=0, metadata=""})
+											if MESSAGES == true then say(player, "The bait is still there.", false) end -- bait still there?
+										end
 									end
 								end
 							end
@@ -83,13 +110,16 @@ local FISHING_BOBBER_ENTITY_SHARK={
 				else --if math.random(1, 100) > FISH_CHANCE then
 					if MESSAGES == true then say(player, "Your fish escaped.", false) end -- fish escaped
 				end
-			else 
+			end
+			if self.object:get_hp() > 300 and minetest.get_node(pos).name == "air" then 
 				if MESSAGES == true then say(player, "You didn't catch anything.", false) end -- fish escaped
-				if math.random(1, 3) == 1 then
-					if inv:room_for_item("main", {name="fishing:fish_raw", count=1, wear=0, metadata=""}) then
-						inv:add_item("main", {name="fishing:fish_raw", count=1, wear=0, metadata=""})
-						if MESSAGES == true then say(player, "The bait is still there.", false) end -- bait still there
-					end	
+				if not minetest.setting_getbool("creative_mode") then
+					if math.random(1, 3) == 1 then
+						if inv:room_for_item("main", {name="fishing:fish_raw", count=1, wear=0, metadata=""}) then
+							inv:add_item("main", {name="fishing:fish_raw", count=1, wear=0, metadata=""})
+							if MESSAGES == true then say(player, "The bait is still there.", false) end -- bait still there
+						end	
+					end
 				end
 			end
 		else 
