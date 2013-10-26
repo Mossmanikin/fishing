@@ -18,27 +18,40 @@ local CaTCH = {
     {"animal_rat",				"rat",				0,			"a Rat.",					false,			84,		1},
 	{"",						"rat",				0,			"a Rat.",					false,			85,		1},
 	{"flowers_plus",			"seaweed",			0,			"some Seaweed.",			true,			86,		20},
-	{"seaplants",				"leavysnackgreen",	0,			"a Leavy Snack.",			true,			106,	10},
+	{"seaplants",				"kelpgreen",		0,			"a Green Kelp.",			true,			106,	10},
 	{"farming",					"string",			0,			"a String.",				true,			116,	2},
 	{"fishing",					"pole",				PoLeWeaR,	"an old Fishing Pole.",		true,			118,	2},
 	{"3d_armor",				"boots_wood",		BooTSWear,	"some very old Boots.",		true,			120,	1},
+	{"trunks",					"twig_1",			0,			"a Twig.",					true,			121,	2},
 }
 minetest.register_alias("flowers_plus:seaweed", "flowers:seaweed") -- exception
 
 local PLaNTS = {
- --	  MoD* 						 iTeM				MeSSaGe ("You caught "..)
-	{"flowers",					"waterlily",		"a Waterlily." }, 
-	{"flowers",					"waterlily_225",	"a Waterlily." }, 
-	{"flowers",					"waterlily_45",		"a Waterlily." }, 
-	{"flowers",					"waterlily_675",	"a Waterlily." }, 
-	{"flowers",					"waterlily_s1",		"a Waterlily." }, 
-	{"flowers",					"waterlily_s2",		"a Waterlily." }, 
-	{"flowers",					"waterlily_s3",		"a Waterlily." }, 
-	{"flowers",					"waterlily_s4",		"a Waterlily." },
-	{"flowers",					"seaweed",			"some Seaweed."}, 
-	{"flowers",					"seaweed_2",		"some Seaweed."}, 
-	{"flowers",					"seaweed_3",		"some Seaweed."}, 
-	{"flowers",					"seaweed_4",		"some Seaweed."}, 
+ --	  MoD* 			iTeM				MeSSaGe ("You caught "..)
+	{"flowers",		"waterlily",		"a Waterlily." }, 
+	{"flowers",		"waterlily_225",	"a Waterlily." }, 
+	{"flowers",		"waterlily_45",		"a Waterlily." }, 
+	{"flowers",		"waterlily_675",	"a Waterlily." }, 
+	{"flowers",		"waterlily_s1",		"a Waterlily." }, 
+	{"flowers",		"waterlily_s2",		"a Waterlily." }, 
+	{"flowers",		"waterlily_s3",		"a Waterlily." }, 
+	{"flowers",		"waterlily_s4",		"a Waterlily." },
+	{"flowers",		"seaweed",			"some Seaweed."}, 
+	{"flowers",		"seaweed_2",		"some Seaweed."}, 
+	{"flowers",		"seaweed_3",		"some Seaweed."}, 
+	{"flowers",		"seaweed_4",		"some Seaweed."},
+	{"trunks",		"twig_1",			"a Twig."	   },
+	{"trunks",		"twig_2",			"a Twig."	   },
+	{"trunks",		"twig_3",			"a Twig."	   },
+	{"trunks",		"twig_4",			"a Twig."	   },
+	{"trunks",		"twig_5",			"a Twig."	   },
+	{"trunks",		"twig_7",			"a Twig."	   },
+	{"trunks",		"twig_8",			"a Twig."	   },
+	{"trunks",		"twig_9",			"a Twig."	   },
+	{"trunks",		"twig_10",			"a Twig."	   },
+	{"trunks",		"twig_11",			"a Twig."	   },
+	{"trunks",		"twig_12",			"a Twig."	   },
+	{"trunks",		"twig_13",			"a Twig."	   },
 }
 -- *as used in the node name
 
@@ -127,11 +140,12 @@ local FISHING_BOBBER_ENTITY={
 						end
 					end
 				end
-			end
+			--end
+			elseif minetest.get_node(pos).name == "air" then
 			-- catch visible fish and invisible stuff
 			if self.object:get_hp() <= 300 then
 				if math.random(1, 100) < FISH_CHANCE then
-					local 	chance = 		math.random(1, 120) -- ><((((º>
+					local 	chance = 		math.random(1, 122) -- ><((((º>
 					for i in pairs(CaTCH) do
 						local 	MoD = 			CaTCH[i][1]
 						local 	iTeM = 			CaTCH[i][2]
@@ -189,6 +203,7 @@ local FISHING_BOBBER_ENTITY={
 						end	
 					end
 				end
+			end
 			end
 		end 
 		-- weither player has fishing pole or not

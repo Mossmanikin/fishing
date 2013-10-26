@@ -1,5 +1,5 @@
 -----------------------------------------------------------------------------------------------
--- Fishing - Mossmanikin's version - Bobber Shark 0.0.5
+-- Fishing - Mossmanikin's version - Bobber Shark 0.0.6
 -- License (code & textures): 	WTFPL
 -----------------------------------------------------------------------------------------------
 
@@ -11,19 +11,31 @@ local CaTCH_BiG = {
 }
 
 local PLaNTS = {
- --	  MoD* 						 iTeM				MeSSaGe ("You caught "..)
-	{"flowers",					"waterlily",		"a Waterlily." }, 
-	{"flowers",					"waterlily_225",	"a Waterlily." }, 
-	{"flowers",					"waterlily_45",		"a Waterlily." }, 
-	{"flowers",					"waterlily_675",	"a Waterlily." }, 
-	{"flowers",					"waterlily_s1",		"a Waterlily." }, 
-	{"flowers",					"waterlily_s2",		"a Waterlily." }, 
-	{"flowers",					"waterlily_s3",		"a Waterlily." }, 
-	{"flowers",					"waterlily_s4",		"a Waterlily." },
-	{"flowers",					"seaweed",			"some Seaweed."}, 
-	{"flowers",					"seaweed_2",		"some Seaweed."}, 
-	{"flowers",					"seaweed_3",		"some Seaweed."}, 
-	{"flowers",					"seaweed_4",		"some Seaweed."}, 
+ --	  MoD* 			iTeM				MeSSaGe ("You caught "..)
+	{"flowers",		"waterlily",		"a Waterlily." }, 
+	{"flowers",		"waterlily_225",	"a Waterlily." }, 
+	{"flowers",		"waterlily_45",		"a Waterlily." }, 
+	{"flowers",		"waterlily_675",	"a Waterlily." }, 
+	{"flowers",		"waterlily_s1",		"a Waterlily." }, 
+	{"flowers",		"waterlily_s2",		"a Waterlily." }, 
+	{"flowers",		"waterlily_s3",		"a Waterlily." }, 
+	{"flowers",		"waterlily_s4",		"a Waterlily." },
+	{"flowers",		"seaweed",			"some Seaweed."}, 
+	{"flowers",		"seaweed_2",		"some Seaweed."}, 
+	{"flowers",		"seaweed_3",		"some Seaweed."}, 
+	{"flowers",		"seaweed_4",		"some Seaweed."},
+	{"trunks",		"twig_1",			"a Twig."	   },
+	{"trunks",		"twig_2",			"a Twig."	   },
+	{"trunks",		"twig_3",			"a Twig."	   },
+	{"trunks",		"twig_4",			"a Twig."	   },
+	{"trunks",		"twig_5",			"a Twig."	   },
+	{"trunks",		"twig_7",			"a Twig."	   },
+	{"trunks",		"twig_8",			"a Twig."	   },
+	{"trunks",		"twig_9",			"a Twig."	   },
+	{"trunks",		"twig_10",			"a Twig."	   },
+	{"trunks",		"twig_11",			"a Twig."	   },
+	{"trunks",		"twig_12",			"a Twig."	   },
+	{"trunks",		"twig_13",			"a Twig."	   },
 }
 -- *as used in the node name
 
@@ -78,9 +90,10 @@ local FISHING_BOBBER_ENTITY_SHARK={
 					end
 				end
 			end
+			--elseif minetest.get_node(pos).name == "air" then
 			if self.object:get_hp() <= 300 then
 				if math.random(1, 100) < SHARK_CHANCE then
-					local 	chance = 		math.random(1, 6) -- ><((((º>
+					local 	chance = 		math.random(1, 5) -- ><((((º>
 					for i in pairs(CaTCH_BiG) do
 						local 	MoD = 			CaTCH_BiG[i][1]
 						local 	iTeM = 			CaTCH_BiG[i][2]
@@ -112,7 +125,7 @@ local FISHING_BOBBER_ENTITY_SHARK={
 				end
 			end
 			if self.object:get_hp() > 300 and minetest.get_node(pos).name == "air" then 
-				if MESSAGES == true then say(player, "You didn't catch anything.", false) end -- fish escaped
+				if MESSAGES == true then say(player, "You didn't catch any fish.", false) end -- fish escaped
 				if not minetest.setting_getbool("creative_mode") then
 					if math.random(1, 3) == 1 then
 						if inv:room_for_item("main", {name="fishing:fish_raw", count=1, wear=0, metadata=""}) then
@@ -122,6 +135,7 @@ local FISHING_BOBBER_ENTITY_SHARK={
 					end
 				end
 			end
+			--end
 		else 
 			if MESSAGES == true then say(player, "Your fish escaped.", false) end -- fish escaped		
 		end

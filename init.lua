@@ -1,6 +1,6 @@
 -----------------------------------------------------------------------------------------------
 local title		= "Fishing - Mossmanikin's version"
-local version 	= "0.2.1"
+local version 	= "0.2.2"
 local mname		= "fishing"
 -----------------------------------------------------------------------------------------------
 -- original by wulfsdad (http://forum.minetest.net/viewtopic.php?id=4375)
