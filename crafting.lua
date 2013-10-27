@@ -1,5 +1,5 @@
 -----------------------------------------------------------------------------------------------
--- Fishing - Mossmanikin's version - Recipes 0.0.7
+-- Fishing - Mossmanikin's version - Recipes 0.0.8
 -----------------------------------------------------------------------------------------------
 -- License (code & textures): 	WTFPL
 -- Contains code from: 		animal_clownfish, animal_fish_blue_white, fishing (original), stoneage
@@ -71,13 +71,6 @@ minetest.register_craft({
 	type = "shapeless",
 	output = "fishing:sushi",
 	recipe = {"fishing:fish_raw","farming:seed_wheat","seaplants:kelpgreen"},
-		
-})
-
-minetest.register_craft({
-	type = "shapeless",
-	output = "fishing:sushi",
-	recipe = {"fishing:fish_raw","farming:seed_wheat","seaplants:kelpgreenmiddle"},
 		
 })
 
