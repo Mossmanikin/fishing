@@ -66,7 +66,11 @@ minetest.register_tool("fishing:pole", {
 						pos = pt.under,
 						gain = 0.5,
 					})
-					minetest.add_entity({interval = 1,x=pt.under.x, y=pt.under.y+(45/64), z=pt.under.z}, "fishing:bobber_entity")
+					local objref = minetest.add_entity({interval = 1,x=pt.under.x, y=pt.under.y+(45/64), z=pt.under.z}, "fishing:bobber_entity")
+					if objref then
+						objref:get_luaentity()._placer = player
+						objref:set_properties({static_save = false})
+					end
 					
 					if WEAR_OUT == true 
 					and not minetest.setting_getbool("creative_mode") then
@@ -83,7 +87,11 @@ minetest.register_tool("fishing:pole", {
 						pos = pt.under,
 						gain = 0.5,
 					})
-					minetest.add_entity({interval = 1,x=pt.under.x, y=pt.under.y+(45/64), z=pt.under.z}, "fishing:bobber_entity_shark")
+					local objref = minetest.add_entity({interval = 1,x=pt.under.x, y=pt.under.y+(45/64), z=pt.under.z}, "fishing:bobber_entity_shark")
+					if objref then
+						objref:get_luaentity()._placer = player
+						objref:set_properties({static_save = false})
+					end
 					
 					if WEAR_OUT == true 
 					and not minetest.setting_getbool("creative_mode") then
