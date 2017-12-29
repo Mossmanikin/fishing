@@ -6,10 +6,13 @@
 local add_particlespawner
 do
 	local version = minetest.get_version()
+	if type(version) == "table" then version = version.string end
 	do
-		local major, minor, patch = version.string:match("(%d+)%.(%d+)%.(%d+)")
+		local major, minor, patch = version:match("(%d+)%.(%d+)%.(%d+)")
 		if major then
 			version = tonumber(major) * 0x10000 + tonumber(minor) * 0x100 + tonumber(patch)
+		else
+			version = 0
 		end
 	end
 	if version >= 0x00040A then
