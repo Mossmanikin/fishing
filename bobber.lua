@@ -5,6 +5,47 @@
 -- Supports:				3d_armor, animal_clownfish, animal_fish_blue_white, animal_rat, flowers_plus, mobs, seaplants
 -----------------------------------------------------------------------------------------------
 
+local add_particlespawner
+do
+	local version = minetest.get_version()
+	if type(version) == "table" then version = version.string end
+	do
+		local major, minor, patch = version:match("(%d+)%.(%d+)%.(%d+)")
+		if major then
+			version = tonumber(major) * 0x10000 + tonumber(minor) * 0x100 + tonumber(patch)
+		else
+			version = 0
+		end
+	end
+	if version >= 0x00040A then
+		-- multi-param version was deprecated in 0.4.10
+		add_particlespawner = function(...)
+			local params = {
+				amount = select(1, ...),
+				time = select(2, ...),
+				minpos = select(3, ...),
+				maxpos = select(4, ...),
+				minvel = select(5, ...),
+				maxvel = select(6, ...),
+				minacc = select(7, ...),
+				maxacc = select(8, ...),
+				minexptime = select(9, ...),
+				maxexptime = select(10, ...),
+				minsize = select(11, ...),
+				maxsize = select(12, ...),
+				collisiondetection = select(13, ...),
+				texture = select(14, ...),
+				playername = select(15, ...)
+			}
+			minetest.add_particlespawner(params)
+		end
+	else
+		add_particlespawner = function(...)
+			minetest.add_particlespawner(...)
+		end
+	end
+end
+
 local PoLeWeaR = (65535/(30-(math.random(15, 29))))
 local BooTSWear = (2000*(math.random(20, 29)))
 -- Here's what you can catch
@@ -114,11 +155,16 @@ local FISHING_BOBBER_ENTITY={
 	end,
 --	WHEN RIGHTCLICKING THE BOBBER THE FOLLOWING HAPPENS	(CLICK AT THE RIGHT TIME WHILE HOLDING A FISHING POLE)	
 	on_rightclick = function (self, clicker)
-		local item = clicker:get_wielded_item()
 		local player = clicker:get_player_name()
+		local say = minetest.chat_send_player
+		if self._placer ~= player then
+			-- player isn't the owner of this bobber
+			say(player, "That's not your bobber!")
+			return
+		end
+		local item = clicker:get_wielded_item()
 		if item:get_name() == "fishing:pole" then
 			local inv = clicker:get_inventory()
-			local say = minetest.chat_send_player
 			local pos = self.object:getpos()
 			-- catch visible plant
 			if minetest.get_node(pos).name ~= "air" then
@@ -233,18 +279,24 @@ local FISHING_BOBBER_ENTITY={
 		if math.random(1, 4) == 1 then
 			self.object:setyaw(self.object:getyaw()+((math.random(0,360)-180)/2880*math.pi))
 		end
-		for _,player in pairs(minetest.get_connected_players()) do
+		local player = minetest.get_player_by_name(self._placer)
+		if player then
 			local s = self.object:getpos()
+			local view_range2 = self.view_range^2
 			local p = player:getpos()
-			local dist = ((p.x-s.x)^2 + (p.y-s.y)^2 + (p.z-s.z)^2)^0.5
-			if dist > self.view_range then
-				-- make sound and remove bobber
-				minetest.sound_play("fishing_bobber1", {
-					pos = self.object:getpos(),
-					gain = 0.5,
-				})
-				self.object:remove()
+			local dist2 = ((p.x-s.x)^2 + (p.y-s.y)^2 + (p.z-s.z)^2)
+			if dist2 > view_range2 then
+				-- mark player for removal
+				player = false
 			end
+		end
+		if not player then
+			-- make sound and remove bobber
+			minetest.sound_play("fishing_bobber1", {
+				pos = self.object:getpos(),
+				gain = 0.5,
+			})
+			self.object:remove()
 		end
 		
 		if self.object:get_hp() > 310 then
@@ -277,7 +329,7 @@ local FISHING_BOBBER_ENTITY={
 					pos = self.object:getpos(),
 					gain = 0.5,
 				})
-				minetest.add_particlespawner(30, 0.5,   -- for how long (?)             -- Particles on splash
+				add_particlespawner(30, 0.5,   -- for how long (?)             -- Particles on splash
 					{x=pos.x,y=pos.y-0.0625,z=pos.z}, {x=pos.x,y=pos.y,z=pos.z}, -- position min, pos max
 					{x=-2,y=-0.0625,z=-2}, {x=2,y=3,z=2}, -- velocity min, vel max
 					{x=0,y=-9.8,z=0}, {x=0,y=-9.8,z=0},
